@@ -7,36 +7,46 @@ import (
 )
 
 type Commit struct {
-	Timestamp int    `json:"timestamp"`
-	Username  string `json:"username"`
-	Files     string `json:"files"`
-	Additions int    `json:"additions"`
-	Deletions int    `json:"deletions"`
+	Timestamp int
+	Username  string
+	Files     int
+	Additions int
+	Deletions int
 }
 
 type Repository struct {
-	RepoName        string   `json:"repository"`
-	Commits         []Commit `json:"commits"`
-	StargazersCount int      `json:"stargazers_count"`
-	ForksCount      int      `json:"forks_count"`
-	OpenIssuesCount int      `json:"open_issues_count"`
+	RepoName      string
+	Commits       []Commit
+	FilesChanged  int
+	LinesAdded    int
+	LinesDeleted  int
+	ActivityScore float64
 }
 
-const TIMESTAMP_POS = 0
-const USERNAME_POS = 1
-const REPO_NAME_POS = 2
-const FILES_POS = 3
-const ADDITIONS_POS = 4
-const DELETIONS_POS = 5
+const (
+	TIMESTAMP_POS = iota
+	USERNAME_POS
+	REPO_NAME_POS
+	FILES_POS
+	ADDITIONS_POS
+	DELETIONS_POS
+)
+
+const (
+	WEIGHT_COMMITS       = 0.4
+	WEIGHT_FILES_CHANGED = 0.2
+	WEIGHT_LINES_ADDED   = 0.2
+	WEIGHT_LINES_DELETED = 0.2
+)
 
 // FindOrCreateRepository finds or creates a repository struct
-func FindOrCreateRepository(repositories []Repository, repoName string) (Repository, bool) {
-	for _, repository := range repositories {
+func FindOrCreateRepository(repositories []Repository, repoName string) (*Repository, bool) {
+	for i, repository := range repositories {
 		if repository.RepoName == repoName {
-			return repository, true
+			return &repositories[i], true
 		}
 	}
-	return Repository{}, false
+	return &Repository{}, false
 }
 
 // GetRepositoriesFromCSVFile reads a CSV file and returns an array of repositories
@@ -53,13 +63,16 @@ func GetRepositoriesFromCSVFile(csvFile string) ([]Repository, error) {
 		if ind > 0 {
 			repository, repoFound := FindOrCreateRepository(repositories, commitArray[REPO_NAME_POS])
 
+			var commit Commit = MapsNewCommitFromCommitArray(commitArray)
+
 			if !repoFound {
-				MapsNewRepoFromCommitArray(&repository, commitArray)
+				MapsNewRepoFromCommitArray(repository, commitArray, commit)
+				repositories = append(repositories, *repository)
 			} else {
-				repository.Commits = append(repository.Commits, NewCommitMappedFromCommitArray(commitArray))
+				repository.Commits = append(repository.Commits, commit)
 			}
 
-			repositories = append(repositories, repository)
+			SetActivityScoreFromCommit(repository, commit)
 		}
 	}
 
@@ -67,23 +80,33 @@ func GetRepositoriesFromCSVFile(csvFile string) ([]Repository, error) {
 }
 
 // MapsNewRepoFromCommitArray creates a new repository mapped from a commit array
-func MapsNewRepoFromCommitArray(repository *Repository, commitArray []string) {
-	var commit Commit = NewCommitMappedFromCommitArray(commitArray)
-
+func MapsNewRepoFromCommitArray(repository *Repository, commitArray []string, commit Commit) {
 	repository.RepoName = commitArray[REPO_NAME_POS]
 	repository.Commits = []Commit{commit}
-	repository.StargazersCount = 0
-	repository.ForksCount = 0
-	repository.OpenIssuesCount = 0
+	repository.FilesChanged = commit.Files
+	repository.LinesAdded = commit.Additions
+	repository.LinesDeleted = commit.Deletions
 }
 
-// MapCommitFromCommitArray maps a commit from a commit array
-func NewCommitMappedFromCommitArray(commitArray []string) Commit {
+// MapsNewCommitFromCommitArray maps a commit from a commit array
+func MapsNewCommitFromCommitArray(commitArray []string) Commit {
 	return Commit{
 		Timestamp: utils.ConvertToInt(commitArray[TIMESTAMP_POS]),
 		Username:  commitArray[USERNAME_POS],
-		Files:     commitArray[FILES_POS],
+		Files:     utils.ConvertToInt(commitArray[FILES_POS]),
 		Additions: utils.ConvertToInt(commitArray[ADDITIONS_POS]),
 		Deletions: utils.ConvertToInt(commitArray[DELETIONS_POS]),
 	}
+}
+
+// SetActivityScoreFromCommit sets the activity score from a commit
+func SetActivityScoreFromCommit(repository *Repository, commit Commit) {
+	repository.FilesChanged += commit.Files
+	repository.LinesAdded += commit.Additions
+	repository.LinesDeleted += commit.Deletions
+	repository.ActivityScore = float64(
+		(float64(len(repository.Commits)) * WEIGHT_COMMITS) +
+			(float64(repository.FilesChanged) * WEIGHT_FILES_CHANGED) +
+			(float64(repository.LinesAdded) * WEIGHT_LINES_ADDED) +
+			(float64(repository.LinesDeleted) * WEIGHT_LINES_DELETED))
 }

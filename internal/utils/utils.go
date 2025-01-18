@@ -33,19 +33,3 @@ func ConvertToInt(stringValue string) int {
 	}
 	return intValue
 }
-
-func UniqueElementsByPosition(arrays [][]string, posInArray int) []string {
-	uniqueMap := make(map[string]bool)
-	var uniqueArray []string
-
-	for _, array := range arrays {
-		var element = array[posInArray]
-
-		if !uniqueMap[element] {
-			uniqueMap[element] = true
-			uniqueArray = append(uniqueArray, element)
-		}
-	}
-
-	return uniqueArray
-}
