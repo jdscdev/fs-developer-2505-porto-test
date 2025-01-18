@@ -17,6 +17,6 @@ func main() {
 	// fmt.Println(repositories)
 
 	for _, repository := range repositories {
-		fmt.Println("Repo:", repository.RepoName, "Commits:", len(repository.Commits), "ActivityStore:", repository.ActivityStore)
+		fmt.Println("Repo:", repository.RepoName, "Commits:", len(repository.Commits), "ActivityScore:", repository.ActivityScore)
 	}
 }
