@@ -21,11 +21,12 @@ func main() {
 
 	fmt.Println(" ********** Top 10 repositories by activity score ********** \n",
 		"-------------------------------------------------------------------------------- \n",
-		" Repo   | #Commits | Files Changed | Lines Added | Lines Deleted | ActivityScore \n",
+		" # | Repo    | #Commits | Files Changed | Lines Added | Lines Deleted | ActivityScore \n",
 		"--------------------------------------------------------------------------------")
 
 	for i := 0; i < 10; i++ {
-		fmt.Printf("%s | %d       | %d          | %d      | %d       | %.2f\n",
+		fmt.Printf(" %d. | %s | %d      | %d          | %d      | %d       | %.2f\n",
+			i+1,
 			repositories[i].RepoName,
 			len(repositories[i].Commits),
 			repositories[i].FilesChanged,

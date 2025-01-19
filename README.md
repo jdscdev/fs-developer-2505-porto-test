@@ -5,7 +5,7 @@ This repository contains a Go-based implementation of an algorithm to rank repos
 
 ## Implementation Plan in Go
 1. Read and Parse the CSV File: <br />
-&emsp;1.1 Use the encoding/csv package to load the data from `commits.csv` file.
+&emsp;1.1 Use the `encoding/csv` package to load the data from `commits.csv` file.
 
 2. Aggregate Data by Repository: <br />
 &emsp;2.1 Use an array of Repository structs to group data by repository name and accumulate metrics (commits, files changed, additions, deletions).
