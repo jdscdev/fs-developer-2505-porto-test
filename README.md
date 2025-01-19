@@ -39,4 +39,6 @@
 
 3. Repositories are ranked by their scores, and the top 10 are printed.
 
-4. The program will print the top 10 repositories in descending order of their scores:
+4. The program will print the top 10 repositories in descending order of their scores: <br />
+<img width="597" alt="top10" src="https://github.com/user-attachments/assets/fb1eb0a1-8026-4471-8b3c-2e4a5f666397" />
+
