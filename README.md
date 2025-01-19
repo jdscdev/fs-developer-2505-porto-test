@@ -1,5 +1,8 @@
 # fs-developer-2505-porto-test
 
+## Description
+This repository contains a Go-based implementation of an algorithm to rank repositories by activity using real anonymized commit data from an inner-source model. The activity score is calculated based on the number of commits, files changed, and lines added or deleted in each repository.
+
 ## Implementation Plan in Go
 1. Read and Parse the CSV File: <br />
 &emsp;1.1 Use the encoding/csv package to load the data from `commits.csv` file.
