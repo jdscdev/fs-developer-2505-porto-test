@@ -43,5 +43,4 @@ This repository contains a Go-based implementation of an algorithm to rank repos
 3. Repositories are ranked by their scores, and the top 10 are printed.
 
 4. The program will print the top 10 repositories in descending order of their scores: <br />
-<img width="597" alt="top10" src="https://github.com/user-attachments/assets/fb1eb0a1-8026-4471-8b3c-2e4a5f666397" />
-
+<img width="615" alt="top10" src="https://github.com/user-attachments/assets/d9ed46d4-86c3-4216-92f4-574b1496317b" />
