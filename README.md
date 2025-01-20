@@ -30,7 +30,7 @@ This repository contains a Go-based implementation of an algorithm to rank repos
 ## Documentation
 ### Algorithm
 1. Each repository is scored based on: <br />
-&emsp;1.1 Weights: <br />
+&emsp;1.1 Weighs: <br />
 &emsp;&emsp;- Commits (wc = 0.4) <br />
 &emsp;&emsp;- Files Changed (wf = 0.2) <br />
 &emsp;&emsp;- Additions (wa = 0.2) <br />
